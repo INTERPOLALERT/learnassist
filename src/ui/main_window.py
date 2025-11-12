@@ -142,6 +142,7 @@ class MainWindow(QMainWindow):
             ("analytics", "📈 Analytics"),
             ("writing", "✍️ Writing Assistant"),
             ("citations", "📚 Citations"),
+            ("canvas", "🎓 Canvas"),
             ("settings", "⚙️ Settings")
         ]
 
@@ -174,6 +175,7 @@ class MainWindow(QMainWindow):
         from .views.analytics_view import AnalyticsView
         from .views.writing_assistant_view import WritingAssistantView
         from .views.citation_view import CitationView
+        from .views.canvas_view import CanvasView
 
         # Create view instances
         self.views = {
@@ -185,6 +187,7 @@ class MainWindow(QMainWindow):
             'analytics': AnalyticsView(self.user_id, self.db),
             'writing': WritingAssistantView(self.user_id, self.db),
             'citations': CitationView(self.user_id, self.db),
+            'canvas': CanvasView(self.user_id, self.db),
             'settings': SettingsView(self.user_id, self.db)
         }
 

@@ -12,6 +12,7 @@ from .focus_view import FocusView
 from .analytics_view import AnalyticsView
 from .writing_assistant_view import WritingAssistantView
 from .citation_view import CitationView
+from .canvas_view import CanvasView
 
 __all__ = [
     "DashboardView",
@@ -22,6 +23,7 @@ __all__ = [
     "FocusView",
     "AnalyticsView",
     "WritingAssistantView",
-    "CitationView"
+    "CitationView",
+    "CanvasView"
 ]
 
