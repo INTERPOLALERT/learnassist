@@ -109,11 +109,18 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 echo [OK] Virtual environment activated
+echo Checking Python location:
+where python
 echo.
 
 echo [5/10] Upgrading pip...
-python -m pip install --upgrade pip --quiet
-echo [OK] pip upgraded
+python -m pip install --upgrade pip
+if %errorlevel% neq 0 (
+    echo [WARNING] pip upgrade failed, but continuing...
+    echo This is usually not critical.
+) else (
+    echo [OK] pip upgraded
+)
 echo.
 
 echo [6/10] Checking Python dependencies...
@@ -125,9 +132,11 @@ if %errorlevel% equ 0 (
     echo Installing dependencies (this may take 5-10 minutes)...
     REM Get the directory where this batch file is located
     set SCRIPT_DIR=%~dp0
+    echo Script directory: %SCRIPT_DIR%
     REM Try to install from requirements.txt in the script directory
     if exist "%SCRIPT_DIR%requirements.txt" (
-        pip install -r "%SCRIPT_DIR%requirements.txt" --quiet
+        echo Found requirements.txt, installing...
+        pip install -r "%SCRIPT_DIR%requirements.txt"
         if %errorlevel% neq 0 (
             echo [ERROR] Failed to install dependencies
             echo.
@@ -139,7 +148,7 @@ if %errorlevel% equ 0 (
     ) else (
         echo [WARNING] requirements.txt not found in %SCRIPT_DIR%
         echo Attempting to install core packages directly...
-        pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy --quiet
+        pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy
         if %errorlevel% neq 0 (
             echo [ERROR] Failed to install core packages
             pause
@@ -151,12 +160,13 @@ if %errorlevel% equ 0 (
 echo.
 
 echo [7/10] Downloading spaCy language model...
-python -m spacy download en_core_web_sm --quiet
+python -m spacy download en_core_web_sm
 if %errorlevel% neq 0 (
     echo [WARNING] Failed to download spaCy model (optional)
     echo You can download it later with: python -m spacy download en_core_web_sm
+) else (
+    echo [OK] spaCy model downloaded
 )
-echo [OK] spaCy model downloaded
 echo.
 
 echo [8/10] Installing Tesseract OCR...
