@@ -141,6 +141,7 @@ class MainWindow(QMainWindow):
             ("focus", "🎯 Focus Mode"),
             ("analytics", "📈 Analytics"),
             ("writing", "✍️ Writing Assistant"),
+            ("citations", "📚 Citations"),
             ("settings", "⚙️ Settings")
         ]
 
@@ -172,6 +173,7 @@ class MainWindow(QMainWindow):
         from .views.focus_view import FocusView
         from .views.analytics_view import AnalyticsView
         from .views.writing_assistant_view import WritingAssistantView
+        from .views.citation_view import CitationView
 
         # Create view instances
         self.views = {
@@ -182,6 +184,7 @@ class MainWindow(QMainWindow):
             'focus': FocusView(self.user_id, self.db),
             'analytics': AnalyticsView(self.user_id, self.db),
             'writing': WritingAssistantView(self.user_id, self.db),
+            'citations': CitationView(self.user_id, self.db),
             'settings': SettingsView(self.user_id, self.db)
         }
 
