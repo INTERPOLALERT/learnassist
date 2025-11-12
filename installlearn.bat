@@ -8,22 +8,29 @@ echo ================================================
 echo   ACADEMIC COMMAND CENTER - INSTALLATION
 echo ================================================
 echo.
+echo Script location: %~dp0
+echo.
 
 REM Set installation directory
 set INSTALL_DIR=C:\Users\Gamer\Getitdone
+echo Installation target: %INSTALL_DIR%
+echo.
 
 echo [1/10] Checking Python installation...
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERROR] Python is not installed!
+    echo [ERROR] Python is not installed or not in PATH!
     echo.
     echo Please install Python 3.11 or later from:
     echo https://www.python.org/downloads/
     echo.
     echo Make sure to check "Add Python to PATH" during installation.
+    echo.
     pause
     exit /b 1
 )
+python --version
+echo.
 
 REM Check Python version
 for /f "tokens=2" %%i in ('python --version 2^>^&1') do set PYTHON_VERSION=%%i
@@ -42,8 +49,26 @@ echo [OK] Python version is compatible
 echo.
 
 echo [2/10] Creating directory structure...
-if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
+if not exist "%INSTALL_DIR%" (
+    echo Creating installation directory: %INSTALL_DIR%
+    mkdir "%INSTALL_DIR%"
+    if %errorlevel% neq 0 (
+        echo [ERROR] Failed to create installation directory!
+        echo Please check permissions or create manually.
+        pause
+        exit /b 1
+    )
+)
+echo Changing to installation directory: %INSTALL_DIR%
 cd /d "%INSTALL_DIR%"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to change to installation directory!
+    echo Directory: %INSTALL_DIR%
+    pause
+    exit /b 1
+)
+echo Current directory: %CD%
+echo.
 
 REM Create all necessary directories
 mkdir config 2>nul
