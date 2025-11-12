@@ -8,12 +8,14 @@ from .essay_view import EssayView
 from .task_view import TaskView
 from .material_view import MaterialView
 from .settings_view import SettingsView
+from .focus_view import FocusView
 
 __all__ = [
     "DashboardView",
     "EssayView",
     "TaskView",
     "MaterialView",
-    "SettingsView"
+    "SettingsView",
+    "FocusView"
 ]
 
