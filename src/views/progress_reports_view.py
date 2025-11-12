@@ -586,7 +586,7 @@ class ProgressReportsView(QWidget):
             lines.append("KEY INSIGHTS")
             lines.append("-" * 60)
             for insight in insights:
-                lines.append(f"" {insight}")
+                lines.append(f"{insight}")
             lines.append("")
 
         # Recommendations
@@ -595,7 +595,7 @@ class ProgressReportsView(QWidget):
             lines.append("RECOMMENDATIONS")
             lines.append("-" * 60)
             for rec in recommendations:
-                lines.append(f"" {rec}")
+                lines.append(f"{rec}")
             lines.append("")
 
         lines.append("=" * 60)
