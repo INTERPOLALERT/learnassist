@@ -169,6 +169,7 @@ class MainWindow(QMainWindow):
         from .views.material_view import MaterialView
         from .views.settings_view import SettingsView
         from .views.focus_view import FocusView
+        from .views.analytics_view import AnalyticsView
 
         # Create view instances
         self.views = {
@@ -177,11 +178,9 @@ class MainWindow(QMainWindow):
             'tasks': TaskView(self.user_id, self.db),
             'materials': MaterialView(self.user_id, self.db),
             'focus': FocusView(self.user_id, self.db),
+            'analytics': AnalyticsView(self.user_id, self.db),
             'settings': SettingsView(self.user_id, self.db)
         }
-
-        # Placeholder views for not-yet-implemented features
-        self.views['analytics'] = self._create_placeholder("Analytics - Coming Soon!")
 
         # Add all views to stack
         for view in self.views.values():

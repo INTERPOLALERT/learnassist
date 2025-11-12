@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS material_links (
 );
 
 -- ============================================
--- FOCUS SESSIONS TABLE
+-- FOCUS SESSIONS TABLE (Phase 3 Pomodoro)
 -- ============================================
 CREATE TABLE IF NOT EXISTS focus_sessions (
     id TEXT PRIMARY KEY,
@@ -267,42 +267,39 @@ CREATE TABLE IF NOT EXISTS focus_sessions (
     task_id TEXT,
     essay_id TEXT,
 
-    -- Session Details
-    session_type TEXT NOT NULL,  -- standard, extended, deep_work, sprint
-    planned_duration_minutes INTEGER NOT NULL,
-    actual_duration_minutes INTEGER,
+    -- Session Details (Pomodoro)
+    session_type TEXT NOT NULL,  -- work, short_break, long_break
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    duration_minutes INTEGER,
+    completed BOOLEAN DEFAULT 1,
 
-    -- Productivity Metrics
+    -- Focus Metrics
+    interruptions INTEGER DEFAULT 0,
+    focus_score REAL DEFAULT 100.0,
+
+    -- Legacy fields (optional)
+    planned_duration_minutes INTEGER,
+    actual_duration_minutes INTEGER,
     words_written INTEGER DEFAULT 0,
     sources_found INTEGER DEFAULT 0,
     tasks_completed INTEGER DEFAULT 0,
     distractions_count INTEGER DEFAULT 0,
-    distraction_details TEXT,  -- JSON array
-
-    -- Quality Ratings (1-10)
+    distraction_details TEXT,
     focus_quality INTEGER,
     energy_level_before INTEGER,
     energy_level_after INTEGER,
-
-    -- Context
     time_of_day TIME,
-    day_of_week INTEGER,  -- 0=Monday, 6=Sunday
-
-    -- Blocking
+    day_of_week INTEGER,
     distractions_blocked BOOLEAN DEFAULT 0,
-    blocked_sites TEXT,  -- JSON array
-
-    -- Notes
+    blocked_sites TEXT,
     session_notes TEXT,
     what_accomplished TEXT,
-
-    -- Status
-    completed BOOLEAN DEFAULT 1,
     abandoned_reason TEXT,
-
-    -- Timestamps
-    started_at TIMESTAMP NOT NULL,
+    started_at TIMESTAMP,
     ended_at TIMESTAMP,
+
+    -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -316,20 +313,25 @@ CREATE INDEX IF NOT EXISTS idx_focus_task ON focus_sessions(task_id);
 CREATE INDEX IF NOT EXISTS idx_focus_date ON focus_sessions(started_at);
 
 -- ============================================
--- PROGRESS LOGS TABLE
+-- PROGRESS LOGS TABLE (Phase 3 Daily Progress)
 -- ============================================
 CREATE TABLE IF NOT EXISTS progress_logs (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
+    date DATE NOT NULL,
     essay_id TEXT,
     task_id TEXT,
 
-    -- Event Details
-    event_type TEXT NOT NULL,  -- task_completed, session_ended, essay_progress, milestone_reached
-    event_description TEXT,
-    event_data TEXT,  -- JSON blob with event-specific data
+    -- Daily Metrics
+    focus_sessions INTEGER DEFAULT 0,
+    time_spent_minutes INTEGER DEFAULT 0,
+    productivity_score REAL DEFAULT 0.0,
+    tasks_completed INTEGER DEFAULT 0,
 
-    -- Metrics Snapshot
+    -- Legacy Event Details
+    event_type TEXT,
+    event_description TEXT,
+    event_data TEXT,
     total_words_count INTEGER,
     completion_percentage REAL,
     tasks_completed_count INTEGER,
@@ -337,14 +339,49 @@ CREATE TABLE IF NOT EXISTS progress_logs (
 
     -- Timestamp
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (essay_id) REFERENCES essays(id) ON DELETE SET NULL,
-    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE SET NULL
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE SET NULL,
+    UNIQUE(user_id, date)
 );
 
 -- Index
 CREATE INDEX IF NOT EXISTS idx_progress_user_date ON progress_logs(user_id, created_at);
+
+-- ============================================
+-- GOALS TABLE (Phase 3 Progress Tracking)
+-- ============================================
+CREATE TABLE IF NOT EXISTS goals (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+
+    -- Goal Details
+    title TEXT NOT NULL,
+    description TEXT,
+    goal_type TEXT NOT NULL,  -- daily, weekly, monthly, semester, custom
+
+    -- Metrics
+    metric TEXT NOT NULL,  -- sessions, tasks, minutes, essays
+    target_value INTEGER NOT NULL,
+    current_value INTEGER DEFAULT 0,
+
+    -- Status
+    status TEXT DEFAULT 'not_started',  -- not_started, in_progress, completed, failed
+    deadline TIMESTAMP,
+
+    -- Metadata
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_goals_user ON goals(user_id);
+CREATE INDEX IF NOT EXISTS idx_goals_status ON goals(status);
+CREATE INDEX IF NOT EXISTS idx_goals_deadline ON goals(deadline);
 
 -- ============================================
 -- AI INTERACTIONS TABLE (Caching & Tracking)

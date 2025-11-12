@@ -9,6 +9,7 @@ from .task_view import TaskView
 from .material_view import MaterialView
 from .settings_view import SettingsView
 from .focus_view import FocusView
+from .analytics_view import AnalyticsView
 
 __all__ = [
     "DashboardView",
@@ -16,6 +17,7 @@ __all__ = [
     "TaskView",
     "MaterialView",
     "SettingsView",
-    "FocusView"
+    "FocusView",
+    "AnalyticsView"
 ]
 

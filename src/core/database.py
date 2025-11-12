@@ -131,7 +131,7 @@ class DatabaseManager:
         """Verify that all required tables exist."""
         required_tables = [
             'users', 'user_api_keys', 'essays', 'tasks', 'materials',
-            'material_links', 'focus_sessions', 'progress_logs',
+            'material_links', 'focus_sessions', 'progress_logs', 'goals',
             'ai_interactions', 'canvas_sync_log', 'sources',
             'writing_snapshots', 'analytics_cache', 'system_health',
             'app_settings'
