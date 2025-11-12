@@ -416,10 +416,10 @@ class ExportManager:
         """Export to PDF format."""
         # Lazy load PDF exporter
         if not self._pdf_exporter:
-            from .pdf_exporter import PDFExporter
-            self._pdf_exporter = PDFExporter()
+            from .pdf_exporter import create_exporter
+            self._pdf_exporter = create_exporter()
 
-        return self._pdf_exporter.export(essay_data, template, output_path, options)
+        return self._pdf_exporter.export(essay_data, output_path, template, options)
 
     def _export_to_latex(
         self,
