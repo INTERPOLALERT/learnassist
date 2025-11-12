@@ -215,15 +215,18 @@ REM Check if Tesseract is already installed
 where tesseract >nul 2>&1
 if %errorlevel% equ 0 (
     echo Tesseract already installed, skipping...
-) else (
-    echo Tesseract not found. You need to install it manually.
-    echo.
-    echo Download from: https://github.com/UB-Mannheim/tesseract/wiki
-    echo Install to: C:\Program Files\Tesseract-OCR\
-    echo.
-    echo Press any key to continue installation (you can install Tesseract later)...
-    pause >nul
+    goto :skip_tesseract
 )
+
+echo Tesseract not found. You need to install it manually.
+echo.
+echo Download from: https://github.com/UB-Mannheim/tesseract/wiki
+echo Install to: C:\Program Files\Tesseract-OCR\
+echo.
+echo Press any key to continue installation (you can install Tesseract later)...
+pause >nul
+
+:skip_tesseract
 echo.
 
 echo [9/10] Initializing database...
