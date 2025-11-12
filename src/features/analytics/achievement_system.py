@@ -77,7 +77,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'study',
         'tier': 'bronze',
         'points': 10,
-        'icon': '=Ú',
+        'icon': '=Ãš',
         'requirement_type': 'study_sessions',
         'requirement_value': 1
     },
@@ -87,7 +87,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'study',
         'tier': 'silver',
         'points': 50,
-        'icon': '=Ö',
+        'icon': '=Ã–',
         'requirement_type': 'study_sessions',
         'requirement_value': 25
     },
@@ -97,7 +97,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'study',
         'tier': 'gold',
         'points': 200,
-        'icon': '<“',
+        'icon': '<Â“',
         'requirement_type': 'study_sessions',
         'requirement_value': 100
     },
@@ -107,7 +107,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'study',
         'tier': 'gold',
         'points': 150,
-        'icon': 'ñ',
+        'icon': 'Ã±',
         'requirement_type': 'study_hours',
         'requirement_value': 50
     },
@@ -169,7 +169,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'grades',
         'tier': 'gold',
         'points': 150,
-        'icon': '=¯',
+        'icon': '=Â¯',
         'requirement_type': 'perfect_assignment',
         'requirement_value': 1
     },
@@ -180,7 +180,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'goals',
         'tier': 'bronze',
         'points': 10,
-        'icon': '<¯',
+        'icon': '<Â¯',
         'requirement_type': 'goals_created',
         'requirement_value': 1
     },
@@ -200,7 +200,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'goals',
         'tier': 'gold',
         'points': 250,
-        'icon': '<Æ',
+        'icon': '<Ã†',
         'requirement_type': 'goals_completed',
         'requirement_value': 20
     },
@@ -211,7 +211,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'assignments',
         'tier': 'bronze',
         'points': 30,
-        'icon': '=Ý',
+        'icon': '=Ã',
         'requirement_type': 'assignments_completed',
         'requirement_value': 10
     },
@@ -221,7 +221,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'assignments',
         'tier': 'silver',
         'points': 100,
-        'icon': '=Ë',
+        'icon': '=Ã‹',
         'requirement_type': 'assignments_completed',
         'requirement_value': 50
     },
@@ -242,7 +242,7 @@ ACHIEVEMENT_DEFINITIONS = [
         'category': 'special',
         'tier': 'silver',
         'points': 75,
-        'icon': '>‰',
+        'icon': '>Â‰',
         'requirement_type': 'late_sessions',
         'requirement_value': 5
     }

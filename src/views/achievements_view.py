@@ -410,7 +410,7 @@ class AchievementsView(QWidget):
 
                     QMessageBox.information(
                         self,
-                        "<‰ New Achievements Unlocked!",
+                        "<Â‰ New Achievements Unlocked!",
                         "\n\n".join(messages)
                     )
 

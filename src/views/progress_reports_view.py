@@ -482,7 +482,7 @@ class ProgressReportsView(QWidget):
 
         # Warning signs
         if warning_signs:
-            signs_text = "\n".join([f"  {sign}" for sign in warning_signs])
+            signs_text = "\n".join([f"Â  {sign}" for sign in warning_signs])
             self.warning_signs_list.setText(signs_text)
         else:
             self.warning_signs_list.setText("No warning signs detected")
@@ -495,14 +495,14 @@ class ProgressReportsView(QWidget):
 
         # Insights
         if insights:
-            insights_text = "\n\n".join([f"=¡ {insight}" for insight in insights])
+            insights_text = "\n\n".join([f"=Â¡ {insight}" for insight in insights])
             self.insights_text.setText(insights_text)
         else:
             self.insights_text.setText("No insights available yet. Keep tracking your progress!")
 
         # Recommendations
         if recommendations:
-            recommendations_text = "\n\n".join([f"=ª {rec}" for rec in recommendations])
+            recommendations_text = "\n\n".join([f"=Âª {rec}" for rec in recommendations])
             self.recommendations_text.setText(recommendations_text)
         else:
             self.recommendations_text.setText("No specific recommendations at this time. Keep up the good work!")

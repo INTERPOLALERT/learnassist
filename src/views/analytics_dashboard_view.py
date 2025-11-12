@@ -486,12 +486,12 @@ class AnalyticsDashboardView(QWidget):
 
                 # Add insights
                 for insight in insights[:3]:
-                    item = QListWidgetItem(f"=¡ {insight}")
+                    item = QListWidgetItem(f"=Â¡ {insight}")
                     self.insights_list.addItem(item)
 
                 # Add recommendations
                 for rec in recommendations[:3]:
-                    item = QListWidgetItem(f"=ª {rec}")
+                    item = QListWidgetItem(f"=Âª {rec}")
                     item.setForeground(QColor("#2196F3"))
                     self.insights_list.addItem(item)
 

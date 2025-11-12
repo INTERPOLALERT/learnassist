@@ -179,16 +179,16 @@ class MainWindow(QMainWindow):
 
         # Add navigation items
         nav_items = [
-            ("📊", "Dashboard"),
-            ("📚", "Assignments"),
-            ("⏱️", "Study Timer"),
-            ("📝", "Notes"),
-            ("📅", "Calendar"),
-            ("🎯", "Goals"),
-            ("🏆", "Achievements"),
-            ("📈", "Progress Reports"),
-            ("🤖", "AI Tools"),
-            ("⚙️", "Settings")
+            ("ð", "Dashboard"),
+            ("ð", "Assignments"),
+            ("â±ï¸", "Study Timer"),
+            ("ð", "Notes"),
+            ("ð", "Calendar"),
+            ("ð¯", "Goals"),
+            ("ð", "Achievements"),
+            ("ð", "Progress Reports"),
+            ("ð¤", "AI Tools"),
+            ("âï¸", "Settings")
         ]
 
         for icon, name in nav_items:
@@ -201,7 +201,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.nav_list)
 
         # User info at bottom
-        user_info = QLabel(f"👤 {self.user_id}")
+        user_info = QLabel(f"ð¤ {self.user_id}")
         user_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         user_info.setStyleSheet("""
             QLabel {
@@ -313,13 +313,13 @@ class MainWindow(QMainWindow):
         self.addToolBar(toolbar)
 
         # Quick actions
-        new_btn = QPushButton("� New")
+        new_btn = QPushButton(" New")
         new_btn.clicked.connect(self._new_assignment)
         toolbar.addWidget(new_btn)
 
         toolbar.addSeparator()
 
-        timer_btn = QPushButton("� Start Timer")
+        timer_btn = QPushButton("ñ Start Timer")
         timer_btn.clicked.connect(lambda: self.navigate_to("Study Timer"))
         toolbar.addWidget(timer_btn)
 
@@ -351,7 +351,7 @@ class MainWindow(QMainWindow):
         statusbar.addPermanentWidget(self.sync_status_label)
 
         # Achievement count
-        self.achievement_label = QLabel("<� 0 achievements")
+        self.achievement_label = QLabel("<Æ 0 achievements")
         statusbar.addPermanentWidget(self.achievement_label)
 
     def _load_views(self):
@@ -379,11 +379,11 @@ class MainWindow(QMainWindow):
             self._add_view("Settings", ai_settings)
 
             # Placeholder views for not-yet-built sections
-            self._add_placeholder_view("Assignments", "=� Assignments View\n\nComing soon...")
-            self._add_placeholder_view("Study Timer", "� Study Timer View\n\nComing soon...")
-            self._add_placeholder_view("Notes", "=� Notes View\n\nComing soon...")
-            self._add_placeholder_view("Calendar", "=� Calendar View\n\nComing soon...")
-            self._add_placeholder_view("AI Tools", "🤖 AI Tools View\n\nComing soon...")
+            self._add_placeholder_view("Assignments", "=Ú Assignments View\n\nComing soon...")
+            self._add_placeholder_view("Study Timer", "ñ Study Timer View\n\nComing soon...")
+            self._add_placeholder_view("Notes", "=Ý Notes View\n\nComing soon...")
+            self._add_placeholder_view("Calendar", "=Å Calendar View\n\nComing soon...")
+            self._add_placeholder_view("AI Tools", "ð¤ AI Tools View\n\nComing soon...")
 
             logger.info(f"Loaded {len(self.views)} views")
 
@@ -484,7 +484,7 @@ class MainWindow(QMainWindow):
 
                     QMessageBox.information(
                         self,
-                        "<� New Achievements!",
+                        "< New Achievements!",
                         "\n\n".join(messages)
                     )
 
@@ -492,7 +492,7 @@ class MainWindow(QMainWindow):
             stats = achievement_system.get_user_stats()
             if stats.get('success'):
                 count = stats['achievements_unlocked']
-                self.achievement_label.setText(f"<� {count} achievements")
+                self.achievement_label.setText(f"<Æ {count} achievements")
 
         except Exception as e:
             logger.error(f"Failed to check achievements: {e}")
