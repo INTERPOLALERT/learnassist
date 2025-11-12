@@ -128,35 +128,40 @@ REM Check if key packages are already installed
 python -c "import PyQt6; import groq; import google.generativeai" >nul 2>&1
 if %errorlevel% equ 0 (
     echo [OK] Dependencies already installed, skipping...
-) else (
-    echo Installing dependencies (this may take 5-10 minutes)...
-    REM Get the directory where this batch file is located
-    set SCRIPT_DIR=%~dp0
-    echo Script directory: %SCRIPT_DIR%
-    REM Try to install from requirements.txt in the script directory
-    if exist "%SCRIPT_DIR%requirements.txt" (
-        echo Found requirements.txt, installing...
-        pip install -r "%SCRIPT_DIR%requirements.txt"
-        if %errorlevel% neq 0 (
-            echo [ERROR] Failed to install dependencies
-            echo.
-            echo Try running manually: pip install -r "%SCRIPT_DIR%requirements.txt"
-            pause
-            exit /b 1
-        )
-        echo [OK] Dependencies installed
-    ) else (
-        echo [WARNING] requirements.txt not found in %SCRIPT_DIR%
-        echo Attempting to install core packages directly...
-        pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy
-        if %errorlevel% neq 0 (
-            echo [ERROR] Failed to install core packages
-            pause
-            exit /b 1
-        )
-        echo [OK] Core dependencies installed
-    )
+    goto :skip_deps
 )
+
+echo Installing dependencies (this may take 5-10 minutes)...
+REM Get the directory where this batch file is located
+set SCRIPT_DIR=%~dp0
+echo Script directory: %SCRIPT_DIR%
+
+REM Try to install from requirements.txt in the script directory
+if exist "%SCRIPT_DIR%requirements.txt" (
+    echo Found requirements.txt, installing...
+    pip install -r "%SCRIPT_DIR%requirements.txt"
+    if errorlevel 1 (
+        echo [ERROR] Failed to install dependencies
+        echo.
+        echo Try running manually: pip install -r "%SCRIPT_DIR%requirements.txt"
+        pause
+        exit /b 1
+    )
+    echo [OK] Dependencies installed
+    goto :skip_deps
+)
+
+echo [WARNING] requirements.txt not found in %SCRIPT_DIR%
+echo Attempting to install core packages directly...
+pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy
+if errorlevel 1 (
+    echo [ERROR] Failed to install core packages
+    pause
+    exit /b 1
+)
+echo [OK] Core dependencies installed
+
+:skip_deps
 echo.
 
 echo [7/10] Downloading spaCy language model...
