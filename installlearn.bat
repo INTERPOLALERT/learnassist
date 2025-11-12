@@ -92,6 +92,21 @@ set SCRIPT_DIR=%~dp0
 echo Copying from: %SCRIPT_DIR%
 echo Copying to: %INSTALL_DIR%
 
+REM Check if script is being run from the installation directory itself
+if /I "%SCRIPT_DIR:~0,-1%"=="%INSTALL_DIR%" (
+    echo [SKIPPED] Already running from installation directory
+    echo Source files already in place
+    goto :skip_copy
+)
+
+REM Check if running from a subdirectory of install dir
+echo %SCRIPT_DIR% | findstr /I /C:"%INSTALL_DIR%" >nul
+if %errorlevel% equ 0 (
+    echo [SKIPPED] Running from subdirectory of installation path
+    echo Source files already in place
+    goto :skip_copy
+)
+
 REM Copy source code
 if exist "%SCRIPT_DIR%src" (
     echo Copying src folder...
@@ -124,6 +139,8 @@ if exist "%SCRIPT_DIR%database\schema.sql" (
 )
 
 echo [OK] Application files copied
+
+:skip_copy
 echo.
 
 echo [3/10] Creating Python virtual environment...
