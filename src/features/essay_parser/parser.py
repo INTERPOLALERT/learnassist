@@ -17,6 +17,11 @@ from core.ai_router import AIRouter
 from .preprocessor import TextPreprocessor
 from .section_identifier import SectionIdentifier
 from .requirement_extractor import RequirementExtractor
+from .verb_analyzer import VerbAnalyzer
+from .concept_extractor import ConceptExtractor
+from .structure_detector import StructureDetector
+from .rubric_decoder import RubricDecoder
+from .gap_detector import KnowledgeGapDetector
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -30,8 +35,12 @@ class EssayParser:
     1. Preprocess text (clean, normalize)
     2. Identify sections (AI)
     3. Extract requirements (AI)
-    4. Parse additional data (verbs, concepts, structure, rubric)
-    5. Save to database
+    4. Analyze task verbs (AI)
+    5. Extract concepts (NLP + AI)
+    6. Detect structure (AI)
+    7. Decode rubric (AI)
+    8. Detect knowledge gaps
+    9. Save to database
     """
 
     def __init__(
@@ -53,10 +62,15 @@ class EssayParser:
         self.db_helper = DatabaseHelper(self.db)
         self.ai_router = ai_router or AIRouter(user_id)
 
-        # Initialize components
+        # Initialize all components
         self.preprocessor = TextPreprocessor()
         self.section_identifier = SectionIdentifier(user_id, self.ai_router)
         self.requirement_extractor = RequirementExtractor(user_id, self.ai_router)
+        self.verb_analyzer = VerbAnalyzer(user_id, self.ai_router)
+        self.concept_extractor = ConceptExtractor(user_id, self.ai_router)
+        self.structure_detector = StructureDetector(user_id, self.ai_router)
+        self.rubric_decoder = RubricDecoder(user_id, self.ai_router)
+        self.gap_detector = KnowledgeGapDetector(user_id, self.db)
 
     def parse(
         self,
@@ -140,13 +154,88 @@ class EssayParser:
                 citation_style = None
                 logger.info("No requirements found in sections")
 
-            # Step 4: Parse deadline
-            logger.info("[4/5] Processing deadline...")
+            # Step 4: Analyze task verbs
+            logger.info("[4/9] Analyzing task verbs...")
+            description = sections.get('description', '')
+            task_verbs_data = None
+
+            if description:
+                verb_result = self.verb_analyzer.analyze(description)
+                if verb_result['success']:
+                    task_verbs_data = verb_result['analysis']
+                    logger.info(f"✓ Task verbs analyzed: {task_verbs_data.get('primary_verb')}")
+                else:
+                    logger.warning("Task verb analysis failed")
+            else:
+                logger.warning("No description for verb analysis")
+
+            # Step 5: Extract concepts
+            logger.info("[5/9] Extracting key concepts...")
+            concepts_data = None
+
+            if description:
+                concept_result = self.concept_extractor.extract(description)
+                if concept_result['success']:
+                    concepts_data = concept_result['concepts']
+                    logger.info(f"✓ Concepts extracted: {len(concepts_data)} concepts")
+                else:
+                    logger.warning("Concept extraction failed")
+            else:
+                logger.warning("No description for concept extraction")
+
+            # Step 6: Detect structure
+            logger.info("[6/9] Detecting essay structure...")
+            structure_data = None
+
+            if description:
+                task_verbs = [task_verbs_data.get('primary_verb')] if task_verbs_data else None
+                structure_result = self.structure_detector.detect(
+                    description,
+                    word_count_max or word_count_min,
+                    task_verbs
+                )
+                if structure_result['success']:
+                    structure_data = structure_result['structure']
+                    logger.info(f"✓ Structure detected: {structure_data.get('essay_type', 'unknown')} essay")
+                else:
+                    logger.warning("Structure detection failed")
+
+            # Step 7: Decode rubric
+            logger.info("[7/9] Decoding rubric...")
+            decoded_rubric = None
+
+            rubric = sections.get('rubric')
+            if rubric:
+                rubric_result = self.rubric_decoder.decode(rubric, description)
+                if rubric_result['success']:
+                    decoded_rubric = rubric_result['decoded_rubric']
+                    logger.info(f"✓ Rubric decoded: {len(decoded_rubric)} criteria")
+                else:
+                    logger.warning("Rubric decoding failed")
+            else:
+                logger.info("No rubric to decode")
+
+            # Step 8: Detect knowledge gaps
+            logger.info("[8/9] Detecting knowledge gaps...")
+            knowledge_gaps = None
+
+            if concepts_data:
+                concept_names = [c['name'] for c in concepts_data]
+                gap_result = self.gap_detector.detect_gaps(concept_names)
+                if gap_result['success']:
+                    knowledge_gaps = gap_result['gaps']
+                    gap_count = len(knowledge_gaps)
+                    logger.info(f"✓ Knowledge gaps detected: {gap_count} gaps found")
+                else:
+                    logger.warning("Gap detection failed")
+
+            # Step 9: Parse deadline
+            logger.info("[9/9] Processing deadline...")
             due_date = self._parse_deadline(sections.get('deadline'))
             logger.info(f"✓ Deadline: {due_date or 'Not specified'}")
 
-            # Step 5: Save to database
-            logger.info("[5/5] Saving to database...")
+            # Save to database
+            logger.info("Saving to database...")
             essay_id = str(uuid.uuid4())
 
             essay_data = {
@@ -165,19 +254,35 @@ class EssayParser:
 
             self.db_helper.create_essay(essay_data)
 
-            # Update with JSON fields
+            # Update with all JSON fields
             import json
             update_query = """
             UPDATE essays
             SET extracted_requirements = ?,
-                rubric_criteria = ?
+                key_concepts = ?,
+                task_verbs = ?,
+                implicit_structure = ?,
+                rubric_criteria = ?,
+                knowledge_gaps = ?
             WHERE id = ?
             """
+
+            # Prepare JSON data
+            concepts_json = json.dumps([c['name'] for c in concepts_data]) if concepts_data else None
+            task_verbs_json = json.dumps([task_verbs_data.get('primary_verb')] + task_verbs_data.get('secondary_verbs', [])) if task_verbs_data else None
+            structure_json = json.dumps(structure_data) if structure_data else None
+            rubric_json = json.dumps(decoded_rubric) if decoded_rubric else None
+            gaps_json = json.dumps([g['concept'] for g in knowledge_gaps]) if knowledge_gaps else None
+
             self.db.execute_query(
                 update_query,
                 (
                     json.dumps(requirements),
-                    json.dumps(sections.get('rubric')) if sections.get('rubric') else None,
+                    concepts_json,
+                    task_verbs_json,
+                    structure_json,
+                    rubric_json,
+                    gaps_json,
                     essay_id
                 )
             )
@@ -197,7 +302,12 @@ class EssayParser:
                 'citation_style': citation_style,
                 'due_date': due_date,
                 'sections': sections,
-                'requirements': requirements
+                'requirements': requirements,
+                'task_verbs': task_verbs_data,
+                'concepts': concepts_data,
+                'structure': structure_data,
+                'decoded_rubric': decoded_rubric,
+                'knowledge_gaps': knowledge_gaps
             }
 
         except Exception as e:
