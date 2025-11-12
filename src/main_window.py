@@ -333,7 +333,7 @@ class MainWindow(QMainWindow):
 
         # Search bar
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("= Search assignments, notes...")
+        self.search_input.setPlaceholderText("Search assignments, notes...")
         self.search_input.setMaximumWidth(300)
         self.search_input.returnPressed.connect(self._perform_search)
         toolbar.addWidget(self.search_input)
