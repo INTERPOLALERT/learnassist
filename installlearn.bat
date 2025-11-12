@@ -137,6 +137,15 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 echo [OK] Database initialized
+
+echo [9.5/10] Applying database schema...
+python -c "import sqlite3; conn = sqlite3.connect('database/acc_main.db'); schema = open('database/schema.sql', 'r').read(); conn.executescript(schema); conn.commit(); conn.close(); print('Schema applied successfully!')"
+if %errorlevel% neq 0 (
+    echo [ERROR] Database schema application failed
+    pause
+    exit /b 1
+)
+echo [OK] Database schema applied (21 tables created)
 echo.
 
 echo [10/10] Creating encryption keys...
