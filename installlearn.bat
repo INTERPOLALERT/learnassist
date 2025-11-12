@@ -126,6 +126,17 @@ if exist "%SCRIPT_DIR%requirements.txt" (
     copy "%SCRIPT_DIR%requirements.txt" "%INSTALL_DIR%\requirements.txt" >nul
 )
 
+REM Copy batch scripts
+if exist "%SCRIPT_DIR%startlearn.bat" (
+    echo Copying startlearn.bat...
+    copy "%SCRIPT_DIR%startlearn.bat" "%INSTALL_DIR%\startlearn.bat" >nul
+)
+
+if exist "%SCRIPT_DIR%fix_pyqt6.bat" (
+    echo Copying fix_pyqt6.bat...
+    copy "%SCRIPT_DIR%fix_pyqt6.bat" "%INSTALL_DIR%\fix_pyqt6.bat" >nul
+)
+
 REM Copy config files if they exist
 if exist "%SCRIPT_DIR%config" (
     echo Copying config folder...
