@@ -587,6 +587,31 @@ INSERT OR IGNORE INTO app_settings (key, value, description) VALUES
     ('language', 'en', 'Default language');
 
 -- ============================================
+-- EXPORT HISTORY TABLE (Phase 6)
+-- ============================================
+CREATE TABLE IF NOT EXISTS export_history (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    essay_id TEXT NOT NULL,
+
+    -- Export Details
+    format TEXT NOT NULL,  -- docx, pdf, latex, markdown, html, txt
+    template TEXT,  -- apa, mla, chicago, harvard, generic
+    file_path TEXT NOT NULL,
+    file_size INTEGER,
+
+    -- Metadata
+    exported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (essay_id) REFERENCES essays(id) ON DELETE CASCADE
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_export_history_user ON export_history(user_id, exported_at);
+CREATE INDEX IF NOT EXISTS idx_export_history_essay ON export_history(essay_id, exported_at);
+
+-- ============================================
 -- TRIGGERS
 -- ============================================
 
