@@ -179,16 +179,16 @@ class MainWindow(QMainWindow):
 
         # Add navigation items
         nav_items = [
-            ("=Ê", "Dashboard"),
-            ("=Ú", "Assignments"),
-            ("ñ", "Study Timer"),
-            ("=Ý", "Notes"),
-            ("=Å", "Calendar"),
-            ("<¯", "Goals"),
-            ("<Æ", "Achievements"),
-            ("=È", "Progress Reports"),
-            (">", "AI Tools"),
-            ("™", "Settings")
+            ("ðŸ“Š", "Dashboard"),
+            ("ðŸ“š", "Assignments"),
+            ("â±ï¸", "Study Timer"),
+            ("ðŸ“", "Notes"),
+            ("ðŸ“…", "Calendar"),
+            ("ðŸŽ¯", "Goals"),
+            ("ðŸ†", "Achievements"),
+            ("ðŸ“ˆ", "Progress Reports"),
+            ("ðŸ¤–", "AI Tools"),
+            ("âš™ï¸", "Settings")
         ]
 
         for icon, name in nav_items:
@@ -201,7 +201,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.nav_list)
 
         # User info at bottom
-        user_info = QLabel(f"=d {self.user_id}")
+        user_info = QLabel(f"ðŸ‘¤ {self.user_id}")
         user_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         user_info.setStyleSheet("""
             QLabel {
@@ -383,7 +383,7 @@ class MainWindow(QMainWindow):
             self._add_placeholder_view("Study Timer", "ñ Study Timer View\n\nComing soon...")
             self._add_placeholder_view("Notes", "=Ý Notes View\n\nComing soon...")
             self._add_placeholder_view("Calendar", "=Å Calendar View\n\nComing soon...")
-            self._add_placeholder_view("AI Tools", "> AI Tools View\n\nComing soon...")
+            self._add_placeholder_view("AI Tools", "ðŸ¤– AI Tools View\n\nComing soon...")
 
             logger.info(f"Loaded {len(self.views)} views")
 
