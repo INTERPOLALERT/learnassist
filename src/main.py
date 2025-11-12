@@ -151,11 +151,10 @@ class AcademicCommandCenter:
             self.app.setStyle("Fusion")  # Modern cross-platform style
 
             # Create main window with full UI
-            from ui.main_window import MainWindow
+            from main_window import MainWindow
 
             self.main_window = MainWindow(
-                user_id=self.current_user_id,
-                db_manager=self.db
+                user_id=self.current_user_id
             )
             self.main_window.setGeometry(100, 100, 1400, 900)
 
