@@ -87,6 +87,45 @@ mkdir builds\audit_reports 2>nul
 echo [OK] Directories created
 echo.
 
+echo [2.5/10] Copying application files...
+set SCRIPT_DIR=%~dp0
+echo Copying from: %SCRIPT_DIR%
+echo Copying to: %INSTALL_DIR%
+
+REM Copy source code
+if exist "%SCRIPT_DIR%src" (
+    echo Copying src folder...
+    xcopy "%SCRIPT_DIR%src" "%INSTALL_DIR%\src\" /E /I /Y /Q
+    if errorlevel 1 (
+        echo [ERROR] Failed to copy src folder
+        pause
+        exit /b 1
+    )
+) else (
+    echo [WARNING] src folder not found in script directory
+)
+
+REM Copy requirements.txt
+if exist "%SCRIPT_DIR%requirements.txt" (
+    echo Copying requirements.txt...
+    copy "%SCRIPT_DIR%requirements.txt" "%INSTALL_DIR%\requirements.txt" >nul
+)
+
+REM Copy config files if they exist
+if exist "%SCRIPT_DIR%config" (
+    echo Copying config folder...
+    xcopy "%SCRIPT_DIR%config" "%INSTALL_DIR%\config\" /E /I /Y /Q
+)
+
+REM Copy database schema
+if exist "%SCRIPT_DIR%database\schema.sql" (
+    echo Copying database schema...
+    copy "%SCRIPT_DIR%database\schema.sql" "%INSTALL_DIR%\database\schema.sql" >nul
+)
+
+echo [OK] Application files copied
+echo.
+
 echo [3/10] Creating Python virtual environment...
 if exist venv (
     echo Virtual environment already exists, skipping...
@@ -132,18 +171,15 @@ if %errorlevel% equ 0 (
 )
 
 echo Installing dependencies (this may take 5-10 minutes)...
-REM Get the directory where this batch file is located
-set SCRIPT_DIR=%~dp0
-echo Script directory: %SCRIPT_DIR%
 
-REM Try to install from requirements.txt in the script directory
-if exist "%SCRIPT_DIR%requirements.txt" (
+REM Try to install from requirements.txt in the current directory (already copied)
+if exist "requirements.txt" (
     echo Found requirements.txt, installing...
-    pip install -r "%SCRIPT_DIR%requirements.txt"
+    pip install -r requirements.txt
     if errorlevel 1 (
         echo [ERROR] Failed to install dependencies
         echo.
-        echo Try running manually: pip install -r "%SCRIPT_DIR%requirements.txt"
+        echo Try running manually: pip install -r requirements.txt
         pause
         exit /b 1
     )
@@ -151,7 +187,7 @@ if exist "%SCRIPT_DIR%requirements.txt" (
     goto :skip_deps
 )
 
-echo [WARNING] requirements.txt not found in %SCRIPT_DIR%
+echo [WARNING] requirements.txt not found
 echo Attempting to install core packages directly...
 pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy
 if errorlevel 1 (
