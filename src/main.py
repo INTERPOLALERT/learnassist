@@ -150,51 +150,14 @@ class AcademicCommandCenter:
             # Set application style
             self.app.setStyle("Fusion")  # Modern cross-platform style
 
-            # Create main window (placeholder for now)
-            from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget
+            # Create main window with full UI
+            from ui.main_window import MainWindow
 
-            self.main_window = QMainWindow()
-            self.main_window.setWindowTitle("Academic Command Center")
-            self.main_window.setGeometry(100, 100, 1400, 900)
-
-            # Placeholder content
-            central_widget = QWidget()
-            layout = QVBoxLayout()
-
-            welcome_label = QLabel(
-                """
-                <h1>Academic Command Center</h1>
-                <h2>Welcome! 🎓</h2>
-                <p>Phase 1 Foundation complete!</p>
-                <br>
-                <p><b>Core Services Status:</b></p>
-                <ul>
-                    <li>✅ Database: Connected</li>
-                    <li>✅ Encryption: Active</li>
-                    <li>✅ API Manager: Ready</li>
-                </ul>
-                <br>
-                <p><b>Next Steps:</b></p>
-                <ol>
-                    <li>Configure your API keys in Settings</li>
-                    <li>Connect to Canvas LMS (optional)</li>
-                    <li>Start adding your essays!</li>
-                </ol>
-                <br>
-                <p><i>Full UI interface coming in Phase 2...</i></p>
-                """
+            self.main_window = MainWindow(
+                user_id=self.current_user_id,
+                db_manager=self.db
             )
-            welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            welcome_label.setStyleSheet("""
-                QLabel {
-                    font-size: 14px;
-                    padding: 40px;
-                }
-            """)
-
-            layout.addWidget(welcome_label)
-            central_widget.setLayout(layout)
-            self.main_window.setCentralWidget(central_widget)
+            self.main_window.setGeometry(100, 100, 1400, 900)
 
             # Show window
             self.main_window.show()
