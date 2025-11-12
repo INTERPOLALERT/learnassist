@@ -431,10 +431,10 @@ class ExportManager:
         """Export to LaTeX format."""
         # Lazy load LaTeX exporter
         if not self._latex_exporter:
-            from .latex_exporter import LaTeXExporter
-            self._latex_exporter = LaTeXExporter()
+            from .latex_exporter import create_exporter
+            self._latex_exporter = create_exporter()
 
-        return self._latex_exporter.export(essay_data, template, output_path, options)
+        return self._latex_exporter.export(essay_data, output_path, template, options)
 
     def _export_to_markdown(
         self,
