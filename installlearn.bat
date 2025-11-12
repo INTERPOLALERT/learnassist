@@ -91,17 +91,38 @@ python -m pip install --upgrade pip --quiet
 echo [OK] pip upgraded
 echo.
 
-echo [6/10] Installing Python dependencies...
-echo This may take 5-10 minutes, please wait...
-pip install -r requirements.txt --quiet
-if %errorlevel% neq 0 (
-    echo [ERROR] Failed to install dependencies
-    echo.
-    echo Try running manually: pip install -r requirements.txt
-    pause
-    exit /b 1
+echo [6/10] Checking Python dependencies...
+REM Check if key packages are already installed
+python -c "import PyQt6; import groq; import google.generativeai" >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [OK] Dependencies already installed, skipping...
+) else (
+    echo Installing dependencies (this may take 5-10 minutes)...
+    REM Get the directory where this batch file is located
+    set SCRIPT_DIR=%~dp0
+    REM Try to install from requirements.txt in the script directory
+    if exist "%SCRIPT_DIR%requirements.txt" (
+        pip install -r "%SCRIPT_DIR%requirements.txt" --quiet
+        if %errorlevel% neq 0 (
+            echo [ERROR] Failed to install dependencies
+            echo.
+            echo Try running manually: pip install -r "%SCRIPT_DIR%requirements.txt"
+            pause
+            exit /b 1
+        )
+        echo [OK] Dependencies installed
+    ) else (
+        echo [WARNING] requirements.txt not found in %SCRIPT_DIR%
+        echo Attempting to install core packages directly...
+        pip install PyQt6 groq google-generativeai anthropic cohere python-docx reportlab cryptography requests canvasapi spacy --quiet
+        if %errorlevel% neq 0 (
+            echo [ERROR] Failed to install core packages
+            pause
+            exit /b 1
+        )
+        echo [OK] Core dependencies installed
+    )
 )
-echo [OK] Dependencies installed
 echo.
 
 echo [7/10] Downloading spaCy language model...
