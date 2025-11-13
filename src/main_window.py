@@ -32,14 +32,14 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from core.database import DatabaseManager
 
-# Import all views (will create these)
-# For now, we'll use placeholder imports
+# Import all views
 try:
     from views.analytics_dashboard_view import AnalyticsDashboardView
     from views.progress_reports_view import ProgressReportsView
     from views.goals_view import GoalsView
     from views.achievements_view import AchievementsView
     from views.ai_settings_view import AISettingsView
+    from views.assignments_view import AssignmentsView
 except ImportError as e:
     logging.warning(f"Some views not yet imported: {e}")
 
@@ -378,8 +378,11 @@ class MainWindow(QMainWindow):
             ai_settings = AISettingsView(self.user_id, self.db)
             self._add_view("Settings", ai_settings)
 
+            # Assignments View
+            assignments_view = AssignmentsView(self.user_id, self.db)
+            self._add_view("Assignments", assignments_view)
+
             # Placeholder views for not-yet-built sections
-            self._add_placeholder_view("Assignments", "=Ú Assignments View\n\nComing soon...")
             self._add_placeholder_view("Study Timer", "ñ Study Timer View\n\nComing soon...")
             self._add_placeholder_view("Notes", "=Ý Notes View\n\nComing soon...")
             self._add_placeholder_view("Calendar", "=Å Calendar View\n\nComing soon...")
