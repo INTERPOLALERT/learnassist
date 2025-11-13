@@ -41,6 +41,7 @@ try:
     from views.ai_settings_view import AISettingsView
     from views.assignments_view import AssignmentsView
     from views.study_timer_view import StudyTimerView
+    from views.notes_view import NotesView
 except ImportError as e:
     logging.warning(f"Some views not yet imported: {e}")
 
@@ -387,7 +388,9 @@ class MainWindow(QMainWindow):
             study_timer_view = StudyTimerView(self.user_id, self.db)
             self._add_view("Study Timer", study_timer_view)
 
-            self._add_placeholder_view("Notes", "=Ý Notes View\n\nComing soon...")
+            notes_view = NotesView(self.user_id, self.db)
+            self._add_view("Notes", notes_view)
+
             self._add_placeholder_view("Calendar", "=Å Calendar View\n\nComing soon...")
             self._add_placeholder_view("AI Tools", "ð¤ AI Tools View\n\nComing soon...")
 
